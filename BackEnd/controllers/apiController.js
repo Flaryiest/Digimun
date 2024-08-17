@@ -20,7 +20,6 @@ async function signUp(req, res) {
 }
 
 async function logIn(req, res) {
-    console.log(req.body)
     if (req.body.email == '' || req.body.password == '') {
         res.sendStatus(400)
     }
@@ -60,18 +59,19 @@ async function getInfo(req, res) {
 }
 
 async function verifyToken(req, res, next) {
-    const token = req.cookies.jwt;
+    const token = req.cookies.jwt
     if (!token) {
-        
-        return res.sendStatus(403);
+        res.redirect("http://localhost:5173/onboard")
     }
-    jwt.verify(token, "keep it spicy", (err, decoded) => {
+    else {
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
             return res.sendStatus(403);
         }
         req.user = decoded.userInfo;
-        next();
-    });
+        next()
+        })
+    }
 
 }
 
@@ -94,5 +94,22 @@ async function getUser(req, res) {
     res.json(req.user)
 }
 
+async function getCommittees(req, res) {
+    const committees = await db.getCommittees(req.user.id)
+    console.log(committees, "committees")
+    res.json(committees)
+}
 
-module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser}
+async function createCommittee(req, res) {
+    console.log(req.body.name, req.body.topic, req.body.conference)
+    const response = await db.createCommittee(req.body.name, req.body.topic, req.body.conference, req.user.id)
+    if (response == "Duplicate Committee") {
+        res.sendStatus(400)
+    }
+    else {
+        res.sendStatus(200)
+    }
+
+}
+
+module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee}

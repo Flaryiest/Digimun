@@ -28,9 +28,46 @@ async function login(email) {
         })
         return user
 
-} catch(err) {
-    return "There is no account associated with this email"
-}
+    }   
+    catch(err) {
+        return "There is no account associated with this email"
+    }   
 }
 
-module.exports = {signUp, login}
+async function getCommittees(userID) {
+    try {
+        const userCommittees = await prisma.user.findUnique({
+            where: {
+                id: userID
+            },
+            include: {
+                committees: true
+            }
+        })
+        return userCommittees.committees
+
+    } catch (error) {
+        console.error("Error fetching user committees:", error);
+        throw error
+    }
+}
+
+async function createCommittee(name, topic, conference) {
+    try {
+        const committee = await prisma.committee.create({
+            data: {
+                name: name,
+                topic: topic,
+                conference: conference
+            }
+        })
+        return committee
+
+    } catch(error) {
+        console.log(error)
+        return "Duplicate Committee"
+    }
+}
+
+
+module.exports = {signUp, login, getCommittees, createCommittee}

@@ -43,6 +43,7 @@ export default function Onboard() {
             headers: {
                 'Content-Type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify({email: data.email, password: data.password})
         })
         console.log(response)
@@ -51,7 +52,8 @@ export default function Onboard() {
             setError("Sign in failed. Please check your details and try again.")
         }
         else if (response.status == 200) {
-            navigate("/")
+            console.log("pog")
+            navigate("/committees")
         }
     }
 
@@ -71,7 +73,7 @@ export default function Onboard() {
             setError("Sign up failed. Please check your details and try again.")
         }
         else if (response.status == 200) {
-            navigate("/")
+            navigate("/committees")
         }
     }
     

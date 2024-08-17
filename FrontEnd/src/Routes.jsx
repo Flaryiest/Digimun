@@ -8,6 +8,7 @@ import Admin from "./pages/Admin";
 import Mod from "./pages/Mod";
 import Motions from "./pages/Motions";
 import Unmod from "./pages/Unmod";
+import Dashboard from "./pages/Dashboard";
 
 function Routes() {
   return createBrowserRouter(
@@ -15,9 +16,9 @@ function Routes() {
         <Route element={<Layout />}>
             <Route path="/" element={<Homepage />} />
             <Route path="onboard" element={<Onboard />} />
+            <Route path="committees" element={<Dashboard />} />
         <Route element={<CommitteeLayout/>}/>
-            <Route path="committees" element={<Onboard />} />
-            <Route path="committees/:committeeID" element={<Committee />} />
+            <Route path="committees/:committeeID" element={<Committee/>} />
             <Route path="committees/:committeeID/setup" element={<Admin />} />
             <Route path="committees/:committeeID/motions" element={<Motions />} />
             <Route path="committees/:committeeID/unmod" element={<Unmod />} />
