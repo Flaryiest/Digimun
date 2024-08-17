@@ -14,7 +14,7 @@ function NavBar() {
         }}>
         <Toolbar>
           <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
-            Digimun
+            <Link to="/">Digimun</Link>
           </Typography>
           <Link to="/onboard"><Button color="inherit">Login</Button></Link>
           <Link to="/onboard"><Button color="inherit">Sign Up</Button></Link>

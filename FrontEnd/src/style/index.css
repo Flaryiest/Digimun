@@ -47,3 +47,7 @@ a:link, a:visited {
   text-decoration: none;
   color: black;
 }
+
+:root {
+	overflow-y: scroll;
+}
