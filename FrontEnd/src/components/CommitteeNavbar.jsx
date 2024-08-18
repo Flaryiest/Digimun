@@ -58,9 +58,11 @@ function CommitteeNavBar() {
                             justifyContent: 'flex-start',
                         }}
                     >
-                        <Button color="inherit" sx={buttonStyles}>
-                            Committee
-                        </Button>
+                        <Link to={`/committees/${committeeID}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <Button color="inherit" sx={buttonStyles}>
+                                Committee
+                            </Button>
+                        </Link>
                         <Link to={`/committees/${committeeID}/setup`} style={{ textDecoration: 'none', color: 'inherit' }}>
                             <Button color="inherit" sx={buttonStyles}>
                                 Setup

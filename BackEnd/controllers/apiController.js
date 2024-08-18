@@ -109,7 +109,29 @@ async function createCommittee(req, res) {
     else {
         res.sendStatus(200)
     }
-
 }
 
-module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee}
+async function getPermissions(req, res) {
+    console.log(req.body.committeeID, req.user.id)
+    const response = await db.getPermissions(req.body.committeeID, req.user.id)
+    console.log(response, "response")
+    if (response) {
+        res.json(response)
+    }
+    else {
+        res.sendStatus(403)
+    }
+}
+
+async function getCommittee(req, res) {
+    console.log(req.body.committeeID)
+    const response = await db.getCommittee(req.body.committeeID)
+    if (response) {
+        res.json(response)
+    }
+    else {
+        res.sendStatus(403)
+    }
+}
+
+module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee}

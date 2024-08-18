@@ -105,5 +105,43 @@ async function createCommittee(name, topic, conference, userID) {
     }
 }
 
+async function getPermissions(committeeID, userID) {
+    try {
+        const decodedCommitteeID = sqids.decode(committeeID)[0]
+        const userProfile = await prisma.profile.findFirst({
+            where: {
+                committeeId: decodedCommitteeID,
+                userId: userID
+            }
+    })
+        console.log(userProfile)
+        return userProfile
 
-module.exports = {signUp, login, getCommittees, createCommittee}
+    } catch(error) {
+        console.log(error)
+        return false
+    }
+}
+
+async function getCommittee(committeeID) {
+    try {
+        const decodedCommitteeID = sqids.decode(committeeID)[0]
+        const committeeInfo = await prisma.committee.findUnique({
+            where: {
+                id: decodedCommitteeID
+            },
+            include: {
+                profiles: true,
+                countries: true
+            }
+        })
+        console.log(committeeInfo)
+        return committeeInfo
+
+    } catch(error) {
+        console.log(error)
+        return false
+    }
+}
+
+module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee}

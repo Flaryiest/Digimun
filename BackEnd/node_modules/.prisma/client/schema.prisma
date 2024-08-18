@@ -18,7 +18,7 @@ model User {
   email      String      @unique
   password   String
   profiles   Profile[]
-  committees Committee[]
+  committees Committee[] @relation("UserCommittees")
 }
 
 model Committee {
@@ -28,9 +28,8 @@ model Committee {
   conference String?
   code       String
   countries  Country[]
-  User       User?     @relation(fields: [userId], references: [id])
-  userId     Int?
-  Profile    Profile[]
+  users      User[]    @relation("UserCommittees")
+  profiles   Profile[]
 }
 
 model Country {
@@ -56,4 +55,5 @@ model Profile {
 enum Role {
   user
   admin
+  viewer
 }
