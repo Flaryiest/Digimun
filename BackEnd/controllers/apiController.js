@@ -101,8 +101,8 @@ async function getCommittees(req, res) {
 }
 
 async function createCommittee(req, res) {
-    console.log(req.body.name, req.body.topic, req.body.conference)
     const response = await db.createCommittee(req.body.name, req.body.topic, req.body.conference, req.user.id)
+    console.log(response)
     if (response == "Duplicate Committee") {
         res.sendStatus(400)
     }

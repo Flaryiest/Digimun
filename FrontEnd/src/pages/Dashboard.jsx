@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { Grid, Card, CardContent, Typography, TextField, Button, Box } from '@mui/material';
+import { Grid, Card, CardContent, CardActions, Typography, Box, TextField, Button, CardActionArea } from '@mui/material'
 
 
 const Dashboard = () => {
     const [committees, setCommittees] = useState([])
-
+    const navigate = useNavigate()
     useEffect(() => {
         getCommittees()
     }, [])
@@ -49,15 +49,22 @@ const Dashboard = () => {
         <Grid container spacing={3}>
           {committees.map((committee, index) => (
             <Grid item xs={12} sm={6} key={index}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h5" component="div">
-                    {committee.name}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    {committee.description}
-                  </Typography>
-                </CardContent>
+              <Card onClick={() => {navigate("/committees/" + committee.code)}}>
+                <CardActionArea>
+                    <CardContent>
+                    <Typography variant="h5" component="div">
+                        {committee.name}
+                    </Typography>
+                    </CardContent>
+                    <CardActions style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="body2" color="textSecondary">
+                        Topic: {committee.topic || 'N/A'}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        Conference: {committee.conference || 'N/A'}
+                    </Typography>
+                    </CardActions>
+                </CardActionArea>
               </Card>
             </Grid>
           ))}
@@ -92,7 +99,13 @@ const Dashboard = () => {
                 variant="outlined"
                 name="conference"
               />
-              <Button variant="contained" color="primary" onClick={createCommittee} fullWidth style={{ marginTop: '20px' }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={createCommittee}
+                fullWidth
+                style={{ marginTop: '20px' }}
+              >
                 Create
               </Button>
             </Box>
@@ -110,7 +123,12 @@ const Dashboard = () => {
                 margin="normal"
                 variant="outlined"
               />
-              <Button variant="contained" color="secondary" fullWidth style={{ marginTop: '20px' }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                style={{ marginTop: '20px' }}
+              >
                 Join
               </Button>
             </Box>

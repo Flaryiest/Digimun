@@ -1,5 +1,11 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
+const Blob = require('buffer').Blob
+const Sqids = require('sqids/cjs').default
+const sqids = new Sqids({
+    minLength: 10
+})
+
 
 async function signUp(email, password) {
     try {
@@ -52,20 +58,50 @@ async function getCommittees(userID) {
     }
 }
 
-async function createCommittee(name, topic, conference) {
+async function createCommittee(name, topic, conference, userID) {
     try {
         const committee = await prisma.committee.create({
             data: {
                 name: name,
                 topic: topic,
-                conference: conference
+                conference: conference,
+                code: name
             }
         })
-        return committee
 
-    } catch(error) {
-        console.log(error)
-        return "Duplicate Committee"
+        const committeeID = committee.id;
+
+        await prisma.committee.update({
+            where: {
+                id: committeeID
+            },
+            data: {
+                code: sqids.encode([committeeID])
+            }
+        })
+
+        const profile = await prisma.profile.create({
+            data: {
+                userId: userID,
+                committeeId: committeeID,
+                role: "admin" 
+            }
+        })
+
+        const user = await prisma.user.update({
+            where: { id: userID },
+            data: {
+                committees: {
+                    connect: { id: committeeID }
+                }
+            }
+        });
+
+        return { committee: committee, profile: profile, user: user };
+
+    } catch (error) {
+        console.log(error);
+        return "Error creating committee or profile";
     }
 }
 
