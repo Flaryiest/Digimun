@@ -154,4 +154,27 @@ async function getCountries() {
     }
 }
 
-module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries}
+async function addCountry(committeeID, country, countryCode) {
+    try {
+        const decodedCommitteeID = sqids.decode(committeeID)[0]
+        await prisma.profile.create({
+            data: {
+                role: "user",
+                country: country,
+                countryCode: countryCode,
+                committee: {
+                    connect: {
+                        id: decodedCommitteeID
+                    }
+                }
+            }
+        })
+        return true
+    } catch(error) {
+        console.log(error)
+        return false
+    }
+}
+
+
+module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry}

@@ -87,7 +87,7 @@ async function checkLoggedIn(req, res) {
 
 async function logOut(req, res) {
     res.clearCookie("jwt")
-    res.sendStatus(200)
+    res.sendStatus(200) //change to redirect later using navigate in react currently
 }
 
 async function getUser(req, res) {
@@ -142,7 +142,19 @@ async function getCountries(req, res) {
     else {
         res.sendStatus(403)
     }
+}
+
+async function addCountry(req, res) {
+    console.log(req.body)
+    const response = await db.addCountry(req.body.committeeID, req.body.country, req.body.countryCode)
+    if (response) {
+        res.sendStatus(200)
+    }
+    else {
+        console.log(response)
+        res.sendStatus(403)
+    }
 
 }
 
-module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries}
+module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry}

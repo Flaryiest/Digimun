@@ -45,7 +45,7 @@ model Profile {
   user         User?     @relation(fields: [userId], references: [id])
   role         Role      @default(user)
   committee    Committee @relation(fields: [committeeId], references: [id])
-  userId       Int
+  userId       Int?
   country      String?
   countryCode  String?
   committeeId  Int

@@ -9,7 +9,7 @@ apiRouter.post("/login", apiController.logIn)
 
 apiRouter.get("/getInfo", apiController.verifyToken, apiController.getInfo)
 
-apiRouter.get("/log-out", apiController.verifyToken, apiController.logOut)
+apiRouter.get("/logOut", apiController.verifyToken, apiController.logOut)
 
 apiRouter.use("/committee", committeeRouter)
 

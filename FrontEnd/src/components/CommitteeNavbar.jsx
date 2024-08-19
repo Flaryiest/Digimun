@@ -6,11 +6,13 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useTheme, useMediaQuery } from '@mui/material';
+
 
 function CommitteeNavBar() {
     const theme = useTheme();
+    const navigate = useNavigate()
     const { committeeID } = useParams();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -23,8 +25,12 @@ function CommitteeNavBar() {
         setAnchorEl(null);
     };
 
-    const handleLogout = () => {
-        console.log('Logged out');
+    const handleLogout = async () => {
+        const response = await fetch("http://localhost:3000/api/logOut", {
+            method: "GET",
+            credentials: "include"
+        })
+        navigate("/")
     };
 
     const buttonStyles = {
