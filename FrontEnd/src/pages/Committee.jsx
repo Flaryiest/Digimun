@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, Link } from "react-router-dom"
 import * as React from 'react';
 import { Grid, Card, CardContent, Typography, Box, Container, Button } from '@mui/material';
 
 function Committee() {
     const [committeeInfo, setCommitteeInfo] = useState(null)
     const params = useParams()
-    
+    const navigate = useNavigate()
     async function getCommitteeInfo() {
         const response = await fetch("http://localhost:3000/api/committee", {
             method: "POST",
@@ -23,7 +23,6 @@ function Committee() {
     useEffect(() => {
         getCommitteeInfo()
     }, [])
-    console.log(committeeInfo, "committee info")
     if (committeeInfo) {
         return (
             <Container>
@@ -40,7 +39,7 @@ function Committee() {
                             <Card sx={{ width: '100%', padding: '20px' }}>
                                 <CardContent>
                                     <Typography variant="h4" component="div" sx={{ textAlign: 'center' }}>
-                                        Main Title
+                                        {committeeInfo.name}
                                     </Typography>
                                 </CardContent>
                             </Card>
@@ -54,7 +53,7 @@ function Committee() {
                                             Topic
                                         </Typography>
                                         <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'center' }}>
-                                            Topic Details
+                                            {committeeInfo.topic}
                                         </Typography>
                                     </CardContent>
                                 </Card>
@@ -67,7 +66,7 @@ function Committee() {
                                             Conference
                                         </Typography>
                                         <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'center' }}>
-                                            Conference Details
+                                            {committeeInfo.conference}
                                         </Typography>
                                     </CardContent>
                                 </Card>
@@ -78,7 +77,7 @@ function Committee() {
                             <Card sx={{ width: '100%', padding: '20px' }}>
                                 <CardContent>
                                     <Typography variant="h6" component="div" sx={{ textAlign: 'center', marginBottom: '16px' }}>
-                                        Description
+                                        Here's the sharable link to your committee
                                     </Typography>
                                     <Typography variant="body1" color="textSecondary" sx={{ textAlign: 'center' }}>
                                         This is a detailed description of the committee or event.
@@ -89,9 +88,11 @@ function Committee() {
     
                         <Grid item xs={12}>
                             <Box sx={{ textAlign: 'center', marginTop: '20px', marginLeft: '35px', paddingLeft: '0px' }}>
-                                <Button variant="contained" color="primary">
-                                    Set Up Committee
-                                </Button>
+                                <Link to="setup">
+                                    <Button variant="contained" color="primary">
+                                        Set Up Committee
+                                    </Button>
+                                </Link>
                             </Box>
                         </Grid>
                     </Grid>

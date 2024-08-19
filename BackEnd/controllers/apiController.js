@@ -134,4 +134,15 @@ async function getCommittee(req, res) {
     }
 }
 
-module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee}
+async function getCountries(req, res) {
+    const countries = await db.getCountries()
+    if (countries) {
+        res.json(countries)
+    }
+    else {
+        res.sendStatus(403)
+    }
+
+}
+
+module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries}

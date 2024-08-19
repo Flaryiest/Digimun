@@ -38,18 +38,21 @@ model Country {
   code        String
   committee   Committee? @relation(fields: [committeeId], references: [id])
   committeeId Int?
-  profiles    Profile[]
 }
 
 model Profile {
-  id          Int       @id @default(autoincrement())
-  user        User      @relation(fields: [userId], references: [id])
-  role        Role      @default(user)
-  country     Country?  @relation(fields: [countryId], references: [id])
-  committee   Committee @relation(fields: [committeeId], references: [id])
-  userId      Int
-  countryId   Int?
-  committeeId Int
+  id           Int       @id @default(autoincrement())
+  user         User?     @relation(fields: [userId], references: [id])
+  role         Role      @default(user)
+  committee    Committee @relation(fields: [committeeId], references: [id])
+  userId       Int
+  country      String?
+  countryCode  String?
+  committeeId  Int
+  workingPaper String?
+  timesSpoken  Int       @default(0)
+  present      Boolean   @default(false)
+  voting       Boolean   @default(false)
 }
 
 enum Role {

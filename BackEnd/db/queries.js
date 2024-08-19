@@ -144,4 +144,14 @@ async function getCommittee(committeeID) {
     }
 }
 
-module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee}
+async function getCountries() {
+    try {
+        const countries = await prisma.country.findMany()
+        return countries
+    } catch(error) {
+        console.log(error)
+        return false
+    }
+}
+
+module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries}

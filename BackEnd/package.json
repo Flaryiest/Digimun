@@ -23,6 +23,7 @@
     "express": "^4.19.2",
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
+    "material-ui-flags": "^1.2.4",
     "sqids": "^0.3.0",
     "squids": "^6.1.2"
   },
