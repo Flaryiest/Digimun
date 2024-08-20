@@ -1,10 +1,9 @@
 import { useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
-
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Switch, IconButton, Autocomplete, TextField} from '@mui/material'
 import { styled } from '@mui/system'
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import ReactCountryFlag from "react-country-flag"
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
     maxWidth: 600,
     margin: 'auto',
@@ -126,7 +125,7 @@ function Admin() {
     }
     
       return (
-        <StyledTableContainer component={Paper}>
+        <StyledTableContainer component={Paper} sx={{ marginBottom: '10dvh'}}>
             <Table size="small">
                 <TableHead>
                     <TableRow>
@@ -169,7 +168,7 @@ function Admin() {
                 <TableBody>
                     {countriesInCommittee.map((row, index) => (
                         <TableRow key={index}>
-                            <StyledTableCell>{row.country}</StyledTableCell>
+                            <StyledTableCell><ReactCountryFlag countryCode={row.countryCode} style={{width: '2em', height: '1em', fontSize: "1.5em"}}/> {row.country}</StyledTableCell>
                             <StyledTableCell>
                                 <StyledSwitch
                                     checked={Boolean(row.present)}
