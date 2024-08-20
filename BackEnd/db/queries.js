@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client')
+const { profile } = require('console')
 const prisma = new PrismaClient()
 const Blob = require('buffer').Blob
 const Sqids = require('sqids/cjs').default
@@ -176,5 +177,56 @@ async function addCountry(committeeID, country, countryCode) {
     }
 }
 
+async function removeCountry(profileID) {
+    try {
+        await prisma.profile.delete({
+            where: {
+                id: profileID
+            }
+        })
+        return true
 
-module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry}
+    } catch(error) {
+        console.log(error)
+        return false
+    }
+}
+
+async function togglePresent(profileID, status) {
+    try {
+        await prisma.profile.update({
+            where: {
+                id: profileID
+            },
+            data: {
+                present: status
+            }
+        })
+        return true
+
+    } catch(error) {
+        console.log(error)
+        return false
+    }
+}
+
+async function toggleVoting(profileID, status) {
+    try {
+        await prisma.profile.update({
+            where: {
+                id: profileID
+            },
+            data: {
+                voting: status
+            }
+        })
+        return true
+
+    } catch(error) {
+        console.log(error)
+        return false
+    }
+}
+
+
+module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting}

@@ -152,9 +152,43 @@ async function addCountry(req, res) {
     }
     else {
         console.log(response)
-        res.sendStatus(403)
+        res.sendStatus(400)
     }
-
 }
 
-module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry}
+async function removeCountry(req, res) {
+    const response = await db.removeCountry(req.body.profileID)
+    if (response) {
+        res.sendStatus(200)
+    }
+    else (
+        res.sendStatus(400)
+    )
+}
+
+async function toggleAttribute(req, res) {
+    if (req.body.field == "present") {
+        const response = db.togglePresent(req.body.profileID, req.body.status)
+        if (response) {
+            res.sendStatus(200)
+        }
+        else {
+            res.sendStatus(400)
+        }
+        
+    }
+    else if (req.body.field == "voting") {
+        const response = db.toggleVoting(req.body.profileID, req.body.status)
+        if (response) {
+            res.sendStatus(200)
+        }
+        else {
+            res.sendStatus(400)
+        }
+    }
+    else {
+        res.sendStatus(400)
+    }
+}
+
+module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, toggleAttribute}
