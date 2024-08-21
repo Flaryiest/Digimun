@@ -75,7 +75,7 @@ function Motions() {
             body: JSON.stringify({committeeID: params.committeeID})
         })
         const committee = await response.json()
-        setMotions(committee.motions)
+        setMotions(committee.Motion)
     }
 
     async function createMotion(profileID, motionType, name, time) {
@@ -87,6 +87,16 @@ function Motions() {
             credentials: 'include',
             body: JSON.stringify({committeeID: params.committeeID, profileID: profileID, motionType: motionType, name: name, time: time})
         })
+        if (response.status == 200) {
+            setSelectedMotion(null)
+            setSelectedCountry(null)
+            setSelectedName("")
+            setSelectedTime("")
+            showNameField(false)
+        }
+        else {
+            console.log("motion creation failed")
+        }
     }
 
     const handleSubmit = (e) => {

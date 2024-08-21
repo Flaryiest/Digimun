@@ -197,17 +197,20 @@ async function getMotionTypes(req, res) {
 
 async function createMotion(req, res) {
     console.log(req.body)
+    let status = false
     if (["open_moderated_caucus", "extend_moderated_caucus"].includes(req.body.motionType)) {
         const response = db.createModMotion(req.body.committeeID, req.body.profileID, req.body.motionType, req.body.name, req.body.time)
+        status = response
     }
     else {
         const response = db.createUnModMotion(req.body.committeeID, req.body.profileID, req.body.motionType, req.body.time)
+        status = response
     }
-    if (response) {
-
+    if (status) {
+        res.sendStatus(200)
     }
     else {
-        
+        res.sendStatus(400)
     }
 
 }

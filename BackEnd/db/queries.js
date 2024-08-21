@@ -132,7 +132,7 @@ async function getCommittee(committeeID) {
             include: {
                 profiles: true,
                 countries: true,
-                motions: true
+                Motion: true
             }
         })
         return committeeInfo
@@ -238,11 +238,54 @@ async function getMotionTypes() {
 }
 
 async function createModMotion(committeeID, profileID, motionType, name, time) {
+    try {
+        const motion = await prisma.motion.create({
+            data: {
+               text: name,
+               time: time,
+               connect: {
+                committee: committeeID,
+                profileID: profileID,
+                motionType: motionType
+            }}
+        })
+        const motionID = motion.id
 
+        await prisma.motion.update({
+            where: {
+                id: motionID
+            },
+            data: {
+                code: sqids.encode([motionID])
+            }
+        })
+
+        return true
+
+    } catch(error) {
+        console.log(error)
+        return false
+    }
 }
 
 async function createUnModMotion(committeeID, profileID, motionType, time) {
-
+    try {
+        console.log("test")
+        const decodedCommitteeID = sqids.decode(committeeID)[0]
+        const response = await prisma.motion.create({
+            data: {
+                time: time,
+                committeeId: decodedCommitteeID,
+                profileId: profileID,
+                motionType: motionType
+            }
+        })
+        return true
+        
+    } catch(error) {
+        console.log(error)
+        return false
+    }
 }
 
 module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion}
