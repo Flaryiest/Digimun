@@ -19,11 +19,11 @@ function CommitteeNavBar() {
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
-    };
+    }
 
     const handleClose = () => {
         setAnchorEl(null);
-    };
+    }
 
     const handleLogout = async () => {
         const response = await fetch("http://localhost:3000/api/logOut", {
@@ -31,7 +31,7 @@ function CommitteeNavBar() {
             credentials: "include"
         })
         navigate("/")
-    };
+    }
 
     const buttonStyles = {
         border: '1px solid rgba(0, 0, 0, 0.1)', 
@@ -40,7 +40,7 @@ function CommitteeNavBar() {
         '&:hover': {
             backgroundColor: 'rgba(0, 0, 0, 0.1)',
         },
-    };
+    }
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -52,7 +52,7 @@ function CommitteeNavBar() {
                 }}
             >
                 <Toolbar>
-                    <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
                             Digimun
                         </Link>

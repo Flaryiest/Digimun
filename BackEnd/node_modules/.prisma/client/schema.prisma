@@ -53,10 +53,31 @@ model Profile {
   timesSpoken  Int       @default(0)
   present      Boolean   @default(false)
   voting       Boolean   @default(false)
+  Motion       Motion[]
+}
+
+model Motion {
+  id         Int        @id @default(autoincrement())
+  profile    Profile?   @relation(fields: [profileId], references: [id])
+  text       String?
+  motionType MotionType @default(open_unmoderated_caucus)
+  profileId  Int?
 }
 
 enum Role {
   user
   admin
   viewer
+}
+
+enum MotionType {
+  open_moderated_caucus
+  open_unmoderated_caucus
+  extend_moderated_caucus
+  extend_unmoderated_caucus
+  open_debate
+  close_debate
+  order_draft_resolutions
+  primary_speakers_list
+  secondary_speakers_list
 }
