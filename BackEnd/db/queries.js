@@ -1,4 +1,4 @@
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient, MotionType  } = require('@prisma/client')
 const { profile } = require('console')
 const prisma = new PrismaClient()
 const Blob = require('buffer').Blob
@@ -16,7 +16,6 @@ async function signUp(email, password) {
                 password: password
             }
     })
-        console.log(user)
         return user
     
     } catch(err) {
@@ -115,7 +114,6 @@ async function getPermissions(committeeID, userID) {
                 userId: userID
             }
     })
-        console.log(userProfile)
         return userProfile
 
     } catch(error) {
@@ -136,7 +134,6 @@ async function getCommittee(committeeID) {
                 countries: true
             }
         })
-        console.log(committeeInfo)
         return committeeInfo
 
     } catch(error) {
@@ -228,5 +225,16 @@ async function toggleVoting(profileID, status) {
     }
 }
 
+async function getMotionTypes() {
+    try {
+        const MotionTypes = Object.keys(MotionType)
+        return MotionTypes
+    } 
+    catch(error) {
+        console.log(error)
+        return false
+    }
+}
 
-module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting}
+
+module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes}

@@ -96,13 +96,11 @@ async function getUser(req, res) {
 
 async function getCommittees(req, res) {
     const committees = await db.getCommittees(req.user.id)
-    console.log(committees, "committees")
     res.json(committees)
 }
 
 async function createCommittee(req, res) {
     const response = await db.createCommittee(req.body.name, req.body.topic, req.body.conference, req.user.id)
-    console.log(response)
     if (response == "Duplicate Committee") {
         res.sendStatus(400)
     }
@@ -112,9 +110,7 @@ async function createCommittee(req, res) {
 }
 
 async function getPermissions(req, res) {
-    console.log(req.body.committeeID, req.user.id)
     const response = await db.getPermissions(req.body.committeeID, req.user.id)
-    console.log(response, "response")
     if (response) {
         res.json(response)
     }
@@ -124,7 +120,6 @@ async function getPermissions(req, res) {
 }
 
 async function getCommittee(req, res) {
-    console.log(req.body.committeeID)
     const response = await db.getCommittee(req.body.committeeID)
     if (response) {
         res.json(response)
@@ -145,7 +140,6 @@ async function getCountries(req, res) {
 }
 
 async function addCountry(req, res) {
-    console.log(req.body)
     const response = await db.addCountry(req.body.committeeID, req.body.country, req.body.countryCode)
     if (response) {
         res.sendStatus(200)
@@ -191,4 +185,14 @@ async function toggleAttribute(req, res) {
     }
 }
 
-module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, toggleAttribute}
+async function getMotionTypes(req, res) {
+    const response = await db.getMotionTypes()
+    if (response) {
+        res.json(response)
+    }
+    else {
+        res.sendStatus(400)
+    }
+}
+
+module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, toggleAttribute, getMotionTypes}

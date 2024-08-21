@@ -5,17 +5,60 @@ import {Box, TextField, Autocomplete, Button, Divider, Card, CardContent, Typogr
   import AccessTimeIcon from '@mui/icons-material/AccessTime'
   import PersonIcon from '@mui/icons-material/Person'
   import DescriptionIcon from '@mui/icons-material/Description'
-  import DeleteIcon from '@mui/icons-material/Delete'
-  import OpenInNewIcon from '@mui/icons-material/OpenInNew'
-
 function Motions() {
     const [motions, setMotions] = useState([])
+    const [motionTypes, setMotionTypes] = useState([])
+    const [motionEnums, setMotionEnums] = useState([])
+    const [selectedMotion, setSelectedMotion] = useState("Open Moderated Caucus")
     const [countries, setCountries] = useState([])
-    
+    const params = useParams()
+    useEffect(() => {
+        getCountriesInCommittee()
+        getMotionTypes()
+    }, [])
+
+    async function getCountriesInCommittee() {
+        const response = await fetch("http://localhost:3000/api/committee", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({committeeID: params.committeeID})
+        })
+        const committee = await response.json()
+        const profilesWithCountry = committee.profiles.filter((profile) => profile.country != null)
+        profilesWithCountry.sort()
+        const countries = profilesWithCountry.map((profile => profile.country))
+        setCountries(countries)
+    }
+
+    async function getMotionTypes() {
+        const response = await fetch("http://localhost:3000/api/committee/motionTypes", {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+        })
+        console.log(response)
+        const motionEnums = await response.json()
+        const motionTypes = motionEnums.map((motionEnum ) => {return motionEnum.replace(/_/g, " ").replace(
+            /\w\S*/g, text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase())
+        })
+        setMotionTypes(motionTypes)
+        setMotionEnums(motionEnums)
+
+    }
+
+    console.log(countries, "countries")
+
     return (
         <Box sx={{ width: '60%', margin: '0 auto', padding: '20px', marginTop: '10dvh'}}>
           <Autocomplete
-            options={['Option 1', 'Option 2', 'Option 3']}
+            options = {motionTypes}
+            value = {selectedMotion}
+            onChange={(event, newValue) => setSelectedMotion(newValue)}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -32,7 +75,7 @@ function Motions() {
             )}/>
     
           <Autocomplete
-            options={['Proposer 1', 'Proposer 2', 'Proposer 3']}
+            options={countries}
             renderInput={(params) => (
               <TextField
                 {...params}
