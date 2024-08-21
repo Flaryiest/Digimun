@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react"
-import { useNavigate, useParams, Link } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 import * as React from 'react';
 import { Grid, Card, CardContent, Typography, Box, Container, Button } from '@mui/material';
 
 function Committee() {
     const [committeeInfo, setCommitteeInfo] = useState(null)
     const params = useParams()
-    const navigate = useNavigate()
     async function getCommitteeInfo() {
         const response = await fetch("http://localhost:3000/api/committee", {
             method: "POST",

@@ -8,14 +8,29 @@ import {Box, TextField, Autocomplete, Button, Divider, Card, CardContent, Typogr
 function Motions() {
     const [motions, setMotions] = useState([])
     const [motionTypes, setMotionTypes] = useState([])
-    const [motionEnums, setMotionEnums] = useState([])
-    const [selectedMotion, setSelectedMotion] = useState("Open Moderated Caucus")
+    const [selectedMotion, setSelectedMotion] = useState(null)
+    const [selectedCountry, setSelectedCountry] = useState(null)
+    const [selectedName, setSelectedName] = useState("")
+    const [selectedTime, setSelectedTime] = useState("")
+    const [showNameField, setShowNameField] = useState(false)
     const [countries, setCountries] = useState([])
+    const [profiles, setProfiles] = useState([])
     const params = useParams()
+
     useEffect(() => {
         getCountriesInCommittee()
         getMotionTypes()
+        getMotions()
     }, [])
+
+    useEffect(() => {
+        if (["Open Moderated Caucus", "Extend Moderated Caucus"].includes(selectedMotion)) {
+            setShowNameField(true)
+        }
+        else {
+            setShowNameField(false)
+        }
+    }, [selectedMotion])
 
     async function getCountriesInCommittee() {
         const response = await fetch("http://localhost:3000/api/committee", {
@@ -30,6 +45,8 @@ function Motions() {
         const profilesWithCountry = committee.profiles.filter((profile) => profile.country != null)
         profilesWithCountry.sort()
         const countries = profilesWithCountry.map((profile => profile.country))
+        countries.sort()
+        setProfiles(profilesWithCountry)
         setCountries(countries)
     }
 
@@ -41,41 +58,79 @@ function Motions() {
             },
             credentials: 'include',
         })
-        console.log(response)
         const motionEnums = await response.json()
         const motionTypes = motionEnums.map((motionEnum ) => {return motionEnum.replace(/_/g, " ").replace(
             /\w\S*/g, text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase())
         })
         setMotionTypes(motionTypes)
-        setMotionEnums(motionEnums)
-
     }
 
-    console.log(countries, "countries")
+    async function getMotions() {
+        const response = await fetch("http://localhost:3000/api/committee", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({committeeID: params.committeeID})
+        })
+        const committee = await response.json()
+        setMotions(committee.motions)
+    }
+
+    async function createMotion(profileID, motionType, name, time) {
+        const response = await fetch("http://localhost:3000/api/committee/motion", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({committeeID: params.committeeID, profileID: profileID, motionType: motionType, name: name, time: time})
+        })
+    }
+
+    const handleSubmit = (e) => {
+        console.log(selectedMotion, selectedCountry, selectedTime, selectedName)
+        const proposer = profiles.filter((profile) => {
+            return profile.country == selectedCountry
+        })
+        const profileID = proposer[0].id
+        createMotion(profileID, selectedMotion.toLowerCase().replace(/ /g, '_'), selectedName, selectedTime)
+    }
+
 
     return (
         <Box sx={{ width: '60%', margin: '0 auto', padding: '20px', marginTop: '10dvh'}}>
-          <Autocomplete
-            options = {motionTypes}
-            value = {selectedMotion}
-            onChange={(event, newValue) => setSelectedMotion(newValue)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Type"
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <React.Fragment>
-                      <DescriptionIcon />
-                      {params.InputProps.endAdornment}
-                    </React.Fragment>
-                  ),
-                }}/>
-            )}/>
-    
+            <Autocomplete
+                options = {motionTypes}
+                value = {selectedMotion}
+                onChange={(event, newValue) => setSelectedMotion(newValue)}
+                renderInput={(params) => (
+                <TextField
+                    {...params}
+                    label="Type"
+                    InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                        <React.Fragment>
+                        <DescriptionIcon />
+                        {params.InputProps.endAdornment}
+                        </React.Fragment>
+                    ),
+                    }}/>
+                )}/>
+
+            {showNameField && <TextField
+                label="Name"
+                value = {selectedName}
+                onChange={(event, newValue) => setSelectedName(event.target.value)}
+                fullWidth
+                sx={{ mt: 2 }}/>}
+                
           <Autocomplete
             options={countries}
+            value = {selectedCountry}
+            onChange={(event, newValue) => setSelectedCountry(newValue)}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -94,6 +149,8 @@ function Motions() {
     
           <TextField
             label="Minutes"
+            value = {selectedTime}
+            onChange={(event, newValue) => setSelectedTime(event.target.value)}
             fullWidth
             InputProps={{
               endAdornment: (
@@ -103,6 +160,7 @@ function Motions() {
           <Button
             variant="contained"
             fullWidth
+            onClick={handleSubmit}
             sx={{ mt: 2 }}>
             Create
           </Button>

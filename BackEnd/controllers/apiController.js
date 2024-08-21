@@ -195,4 +195,21 @@ async function getMotionTypes(req, res) {
     }
 }
 
-module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, toggleAttribute, getMotionTypes}
+async function createMotion(req, res) {
+    console.log(req.body)
+    if (["open_moderated_caucus", "extend_moderated_caucus"].includes(req.body.motionType)) {
+        const response = db.createModMotion(req.body.committeeID, req.body.profileID, req.body.motionType, req.body.name, req.body.time)
+    }
+    else {
+        const response = db.createUnModMotion(req.body.committeeID, req.body.profileID, req.body.motionType, req.body.time)
+    }
+    if (response) {
+
+    }
+    else {
+        
+    }
+
+}
+
+module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, toggleAttribute, getMotionTypes, createMotion}

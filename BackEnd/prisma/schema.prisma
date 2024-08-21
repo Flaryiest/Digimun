@@ -30,6 +30,7 @@ model Committee {
   countries  Country[]
   users      User[]    @relation("UserCommittees")
   profiles   Profile[]
+  motions    Motion[]
 }
 
 model Country {
@@ -57,11 +58,13 @@ model Profile {
 }
 
 model Motion {
-  id         Int        @id @default(autoincrement())
-  profile    Profile?   @relation(fields: [profileId], references: [id])
+  id         Int         @id @default(autoincrement())
+  profile    Profile?    @relation(fields: [profileId], references: [id])
   text       String?
-  motionType MotionType @default(open_unmoderated_caucus)
+  motionType MotionType  @default(open_unmoderated_caucus)
   profileId  Int?
+  time       String
+  Committee  Committee[]
 }
 
 enum Role {

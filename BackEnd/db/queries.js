@@ -131,7 +131,8 @@ async function getCommittee(committeeID) {
             },
             include: {
                 profiles: true,
-                countries: true
+                countries: true,
+                motions: true
             }
         })
         return committeeInfo
@@ -236,5 +237,12 @@ async function getMotionTypes() {
     }
 }
 
+async function createModMotion(committeeID, profileID, motionType, name, time) {
 
-module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes}
+}
+
+async function createUnModMotion(committeeID, profileID, motionType, time) {
+
+}
+
+module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion}
