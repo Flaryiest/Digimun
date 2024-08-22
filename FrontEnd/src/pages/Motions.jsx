@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import React from "react"
-import {Box, TextField, Autocomplete, Button, Divider, Card, CardContent, Typography, Paper} from '@mui/material';
+import {Box, TextField, Autocomplete, Button, Divider, Card, CardContent, Typography, Paper, Chip} from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import PersonIcon from '@mui/icons-material/Person'
 import DescriptionIcon from '@mui/icons-material/Description'
@@ -49,50 +49,95 @@ const MotionCard = ({ motion, rerenderFunction }) => {
         }
         else {
             console.log("opening motion failed")
-        }
-        
+        }        
     }
 
-    return (
-      <Card sx={{ mt: 2, mb: 2 }} key={motion.id}>
-        <CardContent>
-          <Typography variant="h6" component="div">
-            {motion.text ||  'No Title'}
-          </Typography>
-          <Paper
-            variant="outlined"
-            sx={{
-              padding: '8px',
-              mt: 2,
-              borderRadius: '4px',
-            }}>
-            Proposer Name: {motion.country}
-          </Paper>
-          {motion.speakingTime && (
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              Speaking Time: {motion.speakingTime} minutes
-            </Typography>
-          )}
-        </CardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '16px' }}>
-          <Button
-            variant="outlined"
-            color="error"
-            sx={{ borderColor: 'red', color: 'red' }}
-            onClick={deleteMotion}>
-            Delete
-          </Button>
-          <Button
-            variant="outlined"
-            color="success"
-            sx={{ borderColor: 'green', color: 'green' }}
-            onClick={openMotion}>
-            Open
-          </Button>
-        </Box>
-      </Card>
-    )
-  }
+    if (['open_unmoderated_caucus', 'extend_unmoderated_caucus'].includes(motion.motionType)) {
+        return (
+            <Card sx={{ mt: 2, mb: 2 }} key={motion.id}>
+              <CardContent>
+                <Typography variant="h6" component="div">
+                  {motion.text ||  String(motion.time / 60) + ' min unmoderated caucus'}
+                </Typography>
+                <Chip
+                  variant="outlined"
+                  label={"Proposer: " + motion.country}
+                  sx={{
+                    paddingTop: '16px',
+                    paddingBottom: '16px',
+                    borderRadius: '4px',
+                  }}>
+                  
+                </Chip>
+              </CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '16px' }}>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  sx={{ borderColor: 'red', color: 'red' }}
+                  onClick={deleteMotion}>
+                  Delete
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="success"
+                  sx={{ borderColor: 'green', color: 'green' }}
+                  onClick={openMotion}>
+                  Open
+                </Button>
+              </Box>
+            </Card>
+          )
+    }
+    else {
+        {console.log(motion)}
+        return (<Card sx={{ mt: 2, mb: 2 }} key={motion.id}>
+              <CardContent>
+                <Typography variant="h6" component="div">
+                  {String(motion.time / 60) + ' min moderated caucus'}
+                </Typography>
+                <Chip
+                  variant="outlined"
+                  label={"Proposer: " + motion.country}
+                  sx={{
+                    paddingTop: '16px',
+                    paddingBottom: '16px',
+                    borderRadius: '4px',
+                  }}>
+                </Chip>
+                <Chip
+                  variant="outlined"
+                  label={"Topic: " + motion.text}
+                  sx={{
+                    paddingTop: '16px',
+                    paddingBottom: '16px',
+                    borderRadius: '4px',
+                    marginLeft: '16px',
+                  }}>
+                </Chip>
+
+              </CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '16px' }}>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  sx={{ borderColor: 'red', color: 'red' }}
+                  onClick={deleteMotion}>
+                  Delete
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="success"
+                  sx={{ borderColor: 'green', color: 'green' }}
+                  onClick={openMotion}>
+                  Open
+                </Button>
+              </Box>
+            </Card>
+        )
+    }
+
+}
 
 
 function Motions() {
@@ -230,7 +275,7 @@ function Motions() {
                 )}/>
 
             {showNameField && <TextField
-                label="Name"
+                label="Topic"
                 value = {selectedName}
                 onChange={(event, newValue) => setSelectedName(event.target.value)}
                 fullWidth

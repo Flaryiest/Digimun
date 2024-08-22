@@ -18,6 +18,8 @@ committeeRouter.post("/caucus", apiController.verifyToken, apiController.openMot
 
 committeeRouter.put("/mod", apiController.verifyToken, apiController.getModInfo)
 
+committeeRouter.put("/unmod", apiController.verifyToken, apiController.getUnmod)
+
 committeeRouter.put("/mods", apiController.verifyToken, apiController.getMods)
 
 committeeRouter.post("/", apiController.verifyToken, apiController.getCommittee)

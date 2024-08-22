@@ -25,14 +25,16 @@ function Mod() {
             console.log("retrieving info failed")
         }
     }
-
-    return (
-        <div>
-        <h1>Committee ID: {committeeID}</h1>
-        <h1>Mod ID: {modID}</h1>
-        {modInfo && <Timer/>}
-        </div>
-  )
+    if (modInfo) {
+        return <Box
+        sx={{display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: '20dvh',
+          boxSizing: 'border-box',}}>
+        <Timer totalTime={modInfo.totalTime} currentTime={modInfo.time} label={"Moderated Caucus"}/>
+      </Box> 
+    }
 }
 
 export default Mod

@@ -243,7 +243,7 @@ async function createModMotion(committeeID, profileID, motionType, name, time, c
         const motion = await prisma.motion.create({
             data: {
                text: name,
-               time: time,
+               time: Number(time * 60),
                country: country,
                speakingTime: Number(speakingTime * 60),
                committeeId: decodedCommitteeID,
@@ -272,7 +272,6 @@ async function createModMotion(committeeID, profileID, motionType, name, time, c
 
 async function createUnModMotion(committeeID, profileID, motionType, time, country) {
     try {
-        console.log(time, Number(time * 60), "time")
         const decodedCommitteeID = sqids.decode(committeeID)[0]
         const motion = await prisma.motion.create({
             data: {
@@ -320,10 +319,10 @@ async function openMotion(motion) {
         const caucus = await prisma.caucus.create({
             data:{
                 text: motion.text,
-                totalTime: Number(motion.time * 60),
-                time: Number(motion.time * 60),
+                totalTime: motion.time,
+                time: motion.time,
                 country: motion.country,
-                speakingTime: Number(motion.speakingTime * 60),
+                speakingTime: motion.speakingTime,
                 committeeId: motion.committeeId,
                 profileId: motion.profileId,
                 motionType: motion.motionType
@@ -350,10 +349,7 @@ async function openMotion(motion) {
 
 async function getModInfo(modID) {
     try {
-        const caucuses = await prisma.caucus.findMany()
-        console.log(caucuses)
         const decodedModID = sqids.decode(modID)[0] - 1
-        console.log(decodedModID)
         const response = await prisma.caucus.findUnique({
             where: {
                 id: decodedModID
@@ -373,7 +369,6 @@ async function getMods(committeeID) {
                 committeeId: decodedCommitteeID
             }
         })
-        console.log(mods, "mods")
         return mods
     } catch(error) {
         console.log(error)
@@ -383,12 +378,13 @@ async function getMods(committeeID) {
 
 async function openUnmodMotion(committeeID, time) {
     try {
-        const committeeUpdate = prisma.committee.update({
+        const committeeUpdate = await prisma.committee.update({
             where: {
-                committeeId: committeeID
+                id: committeeID
             },
             data: {
-                unmodTime: Number(time * 60)
+                totalUnmodTime: time,
+                unmodTime: time
             }
         })
         return true
@@ -398,4 +394,20 @@ async function openUnmodMotion(committeeID, time) {
     }
 }
 
-module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion, deleteMotion, openMotion, getModInfo, getMods, openUnmodMotion}
+async function getUnmod(committeeID) {
+    const decodedCommitteeID = sqids.decode(committeeID)[0]
+    try {
+        const committee = await prisma.committee.findUnique({
+            where: {
+                id: decodedCommitteeID
+            }
+        })
+        return {totalTime: committee.totalUnmodTime, time: committee.unmodTime}
+
+    } catch(error) {
+        console.log(error)
+        return false
+    }
+}
+
+module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion, deleteMotion, openMotion, getModInfo, getMods, openUnmodMotion, getUnmod}
