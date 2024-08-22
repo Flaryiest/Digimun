@@ -225,13 +225,24 @@ async function deleteMotion(req, res) {
 }
 
 async function openMotion(req, res) {
-    console.log(req.body.motion)
-    const caucus = await db.openMotion(req.body.motion)
-    if (caucus) {
-        res.status(200).json(caucus)
+    if (["open_unmoderated_caucus", "extend_unmoderated_caucus"].includes(req.body.motion.motionType)) {
+        console.log(req.body.motion.committeeId)
+        const unmod = await db.openUnmodMotion(req.body.motion.committeeId, req.body.motion.time)
+        if (unmod) {
+            res.json({motionType: "open_unmoderated_caucus"})
+        }
+        else {
+            res.sendStatus(400)
+        }
     }
     else {
-        res.sendStatus(400)
+        const caucus = await db.openMotion(req.body.motion)
+        if (caucus) {
+            res.status(200).json(caucus)
+        }
+        else {
+            res.sendStatus(400)
+        }
     }
 }
 

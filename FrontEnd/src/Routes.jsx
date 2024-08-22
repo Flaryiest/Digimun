@@ -24,7 +24,7 @@ function Routes() {
         <Route path="committees/:committeeID" element={<Committee />} />
         <Route path="committees/:committeeID/setup" element={<Admin />} />
         <Route path="committees/:committeeID/motions" element={<Motions />} />
-        <Route path="committees/:committeeID/unmod/:unmodID" element={<Unmod />} />
+        <Route path="committees/:committeeID/unmod" element={<Unmod />} />
         <Route path="committees/:committeeID/mod/:modID" element={<Mod />} />
       </Route>
 

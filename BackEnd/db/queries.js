@@ -245,7 +245,7 @@ async function createModMotion(committeeID, profileID, motionType, name, time, c
                text: name,
                time: time,
                country: country,
-               speakingTime, speakingTime,
+               speakingTime: Number(speakingTime * 60),
                committeeId: decodedCommitteeID,
                profileId: profileID,
                motionType: motionType
@@ -272,14 +272,24 @@ async function createModMotion(committeeID, profileID, motionType, name, time, c
 
 async function createUnModMotion(committeeID, profileID, motionType, time, country) {
     try {
+        console.log(time, Number(time * 60), "time")
         const decodedCommitteeID = sqids.decode(committeeID)[0]
-        const response = await prisma.motion.create({
+        const motion = await prisma.motion.create({
             data: {
-                time: time,
+                time: Number(time * 60),
                 committeeId: decodedCommitteeID,
                 profileId: profileID,
                 country: country,
                 motionType: motionType
+            }
+        })
+        const motionCode = sqids.encode([motion.id])
+        await prisma.motion.update({
+            where: {
+                id: motion.id
+            },
+            data: {
+                code: motionCode
             }
         })
         return true
@@ -310,9 +320,10 @@ async function openMotion(motion) {
         const caucus = await prisma.caucus.create({
             data:{
                 text: motion.text,
-                time: motion.time,
+                totalTime: Number(motion.time * 60),
+                time: Number(motion.time * 60),
                 country: motion.country,
-                speakingTime: motion.speakingTime,
+                speakingTime: Number(motion.speakingTime * 60),
                 committeeId: motion.committeeId,
                 profileId: motion.profileId,
                 motionType: motion.motionType
@@ -370,4 +381,21 @@ async function getMods(committeeID) {
     }
 }
 
-module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion, deleteMotion, openMotion, getModInfo, getMods}
+async function openUnmodMotion(committeeID, time) {
+    try {
+        const committeeUpdate = prisma.committee.update({
+            where: {
+                committeeId: committeeID
+            },
+            data: {
+                unmodTime: Number(time * 60)
+            }
+        })
+        return true
+    } catch(error) {
+        console.log(error)
+        return false
+    }
+}
+
+module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion, deleteMotion, openMotion, getModInfo, getMods, openUnmodMotion}

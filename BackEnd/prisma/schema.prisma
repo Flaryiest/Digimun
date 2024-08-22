@@ -22,16 +22,18 @@ model User {
 }
 
 model Committee {
-  id         Int       @id @default(autoincrement())
-  name       String    @unique
-  topic      String?
-  conference String?
-  code       String
-  countries  Country[]
-  users      User[]    @relation("UserCommittees")
-  profiles   Profile[]
-  Motion     Motion[]
-  Caucus     Caucus[]
+  id             Int       @id @default(autoincrement())
+  name           String    @unique
+  topic          String?
+  conference     String?
+  code           String
+  totalUnmodTime Int       @default(600)
+  unmodTime      Int       @default(600)
+  countries      Country[]
+  users          User[]    @relation("UserCommittees")
+  profiles       Profile[]
+  Motion         Motion[]
+  Caucus         Caucus[]
 }
 
 model Country {
@@ -66,8 +68,8 @@ model Motion {
   text         String?
   code         String?
   motionType   MotionType @default(open_unmoderated_caucus)
-  time         String
-  speakingTime String?
+  time         Int        @default(600)
+  speakingTime Int?       @default(60)
   committee    Committee  @relation(fields: [committeeId], references: [id])
   committeeId  Int
   country      String?
@@ -80,8 +82,9 @@ model Caucus {
   text         String?
   code         String?
   motionType   MotionType @default(open_unmoderated_caucus)
-  time         String
-  speakingTime String?
+  totalTime    Int        @default(600)
+  time         Int        @default(600)
+  speakingTime Int        @default(60)
   committee    Committee  @relation(fields: [committeeId], references: [id])
   committeeId  Int
   country      String?

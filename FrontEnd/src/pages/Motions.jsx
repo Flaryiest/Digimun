@@ -38,9 +38,14 @@ const MotionCard = ({ motion, rerenderFunction }) => {
         })
         const caucus = await response.json()
         if (response.status == 200) {
-            console.log(caucus)
-            const path = "/committees/" + params.committeeID + "/mod/" + motionInfo.code
-            navigate(path)
+            if (["open_unmoderated_caucus","extend_unmoderated_caucus"].includes(caucus.motionType)) {
+                navigate("/committees/" + params.committeeID + "/unmod")
+            }
+            else {
+                const path = "/committees/" + params.committeeID + "/mod/" + motionInfo.code
+                navigate(path)
+            }
+            
         }
         else {
             console.log("opening motion failed")
@@ -52,7 +57,7 @@ const MotionCard = ({ motion, rerenderFunction }) => {
       <Card sx={{ mt: 2, mb: 2 }} key={motion.id}>
         <CardContent>
           <Typography variant="h6" component="div">
-            {motion.text || 'No Title'}
+            {motion.text ||  'No Title'}
           </Typography>
           <Paper
             variant="outlined"
