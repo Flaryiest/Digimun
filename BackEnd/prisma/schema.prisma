@@ -58,15 +58,17 @@ model Profile {
 }
 
 model Motion {
-  id          Int        @id @default(autoincrement())
-  profile     Profile?   @relation(fields: [profileId], references: [id])
-  profileId   Int?
-  text        String?
-  code        String?
-  motionType  MotionType @default(open_unmoderated_caucus)
-  time        String
-  committee   Committee  @relation(fields: [committeeId], references: [id])
-  committeeId Int
+  id           Int        @id @default(autoincrement())
+  profile      Profile?   @relation(fields: [profileId], references: [id])
+  profileId    Int?
+  text         String?
+  code         String?
+  motionType   MotionType @default(open_unmoderated_caucus)
+  time         String
+  speakingTime String?
+  committee    Committee  @relation(fields: [committeeId], references: [id])
+  committeeId  Int
+  country      String?
 }
 
 enum Role {

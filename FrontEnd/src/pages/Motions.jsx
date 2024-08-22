@@ -2,9 +2,71 @@ import { useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
 import React from "react"
 import {Box, TextField, Autocomplete, Button, Divider, Card, CardContent, Typography, Paper} from '@mui/material';
-  import AccessTimeIcon from '@mui/icons-material/AccessTime'
-  import PersonIcon from '@mui/icons-material/Person'
-  import DescriptionIcon from '@mui/icons-material/Description'
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import PersonIcon from '@mui/icons-material/Person'
+import DescriptionIcon from '@mui/icons-material/Description'
+
+const MotionCard = ({ motion, rerenderFunction }) => {
+    const [motionID, setMotionID] = useState(motion.id)
+    async function deleteMotion() {
+        console.log(motionID)
+        const response = await fetch("http://localhost:3000/api/committee/motion", {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({motionID: motionID})
+        })
+        if (response.status == 200) {
+            rerenderFunction()
+        }
+        else {
+            console.log("delete failed")
+        }
+    }
+
+    return (
+      <Card sx={{ mt: 2, mb: 2 }} key={motion.id}>
+        <CardContent>
+          <Typography variant="h6" component="div">
+            {motion.text || 'No Title'}
+          </Typography>
+          <Paper
+            variant="outlined"
+            sx={{
+              padding: '8px',
+              mt: 2,
+              borderRadius: '4px',
+            }}>
+            Proposer Name: {motion.country}
+          </Paper>
+          {motion.speakingTime && (
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              Speaking Time: {motion.speakingTime} minutes
+            </Typography>
+          )}
+        </CardContent>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '16px' }}>
+          <Button
+            variant="outlined"
+            color="error"
+            sx={{ borderColor: 'red', color: 'red' }}
+            onClick={deleteMotion}>
+            Delete
+          </Button>
+          <Button
+            variant="outlined"
+            color="success"
+            sx={{ borderColor: 'green', color: 'green' }}>
+            Open
+          </Button>
+        </Box>
+      </Card>
+    )
+  }
+
+
 function Motions() {
     const [motions, setMotions] = useState([])
     const [motionTypes, setMotionTypes] = useState([])
@@ -12,11 +74,13 @@ function Motions() {
     const [selectedCountry, setSelectedCountry] = useState(null)
     const [selectedName, setSelectedName] = useState("")
     const [selectedTime, setSelectedTime] = useState("")
+    const [selectedSpeakingTime, setSelectedSpeakingTime] = useState("")
     const [showNameField, setShowNameField] = useState(false)
     const [countries, setCountries] = useState([])
     const [profiles, setProfiles] = useState([])
+    const [rerender, setRerender] = useState(0)
     const params = useParams()
-
+    console.log(motions)
     useEffect(() => {
         getCountriesInCommittee()
         getMotionTypes()
@@ -78,25 +142,30 @@ function Motions() {
         setMotions(committee.Motion)
     }
 
-    async function createMotion(profileID, motionType, name, time) {
+    async function createMotion(profileID, motionType, name, time, country, speakingTime) {
         const response = await fetch("http://localhost:3000/api/committee/motion", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({committeeID: params.committeeID, profileID: profileID, motionType: motionType, name: name, time: time})
+            body: JSON.stringify({committeeID: params.committeeID, profileID: profileID, motionType: motionType, name: name, time: time, country: country, speakingTime: speakingTime})
         })
         if (response.status == 200) {
             setSelectedMotion(null)
             setSelectedCountry(null)
             setSelectedName("")
             setSelectedTime("")
-            showNameField(false)
+            setSelectedSpeakingTime("")
+            setShowNameField(false)
         }
         else {
             console.log("motion creation failed")
         }
+    }
+
+    function triggerRerender() {
+        setRerender(prevState => prevState + 1)
     }
 
     const handleSubmit = (e) => {
@@ -105,12 +174,12 @@ function Motions() {
             return profile.country == selectedCountry
         })
         const profileID = proposer[0].id
-        createMotion(profileID, selectedMotion.toLowerCase().replace(/ /g, '_'), selectedName, selectedTime)
+        createMotion(profileID, selectedMotion.toLowerCase().replace(/ /g, '_'), selectedName, selectedTime, proposer[0].country, selectedSpeakingTime)
     }
 
 
     return (
-        <Box sx={{ width: '60%', margin: '0 auto', padding: '20px', marginTop: '10dvh'}}>
+        <Box sx={{ width: '50%', minWidth: "300px", margin: '0 auto', padding: '20px', marginTop: '10dvh'}}>
             <Autocomplete
                 options = {motionTypes}
                 value = {selectedMotion}
@@ -136,7 +205,7 @@ function Motions() {
                 onChange={(event, newValue) => setSelectedName(event.target.value)}
                 fullWidth
                 sx={{ mt: 2 }}/>}
-                
+
           <Autocomplete
             options={countries}
             value = {selectedCountry}
@@ -157,7 +226,7 @@ function Motions() {
             )}
             sx={{ mt: 2 }}/>
     
-          <TextField
+        <TextField
             label="Minutes"
             value = {selectedTime}
             onChange={(event, newValue) => setSelectedTime(event.target.value)}
@@ -167,48 +236,42 @@ function Motions() {
                 <AccessTimeIcon />
               )}} 
             sx={{ mt: 2 }}/>
-          <Button
+
+        {showNameField && <TextField
+            label="Speaking Time"
+            value = {selectedSpeakingTime}
+            onChange={(event, newValue) => setSelectedSpeakingTime(event.target.value)}
+            fullWidth
+            InputProps={{
+                endAdornment: (
+                  <AccessTimeIcon />
+                )}} 
+            sx={{ mt: 2 }}/>}
+
+        <Button
             variant="contained"
             fullWidth
             onClick={handleSubmit}
             sx={{ mt: 2 }}>
             Create
-          </Button>
+        </Button>
     
-          <Divider sx={{ mt: 4, mb: 2 }} />
-          <Card sx={{ mt: 2, mb: 2 }}>
-            <CardContent>
-              <Typography variant="h6" component="div">
-                Card Title
-              </Typography>
-              <Paper
-                variant="outlined"
-                sx={{
-                  padding: '8px',
-                  mt: 2,
-                  borderRadius: '4px',
-                }}>
-                Proposer Name:
-              </Paper>
-            </CardContent>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '16px' }}>
-              <Button
-                variant="outlined"
-                color="error"
-                sx={{ borderColor: 'red', color: 'red' }}>
-                Delete
-              </Button>
-              <Button
-                variant="outlined"
-                color="success"
-                sx={{ borderColor: 'green', color: 'green' }}>
-                Open
-              </Button>
-            </Box>
-          </Card>
-    
+        <Divider sx={{ mt: 4, mb: 2 }} />
+        <Button
+            variant="outlined"
+            color="error"
+            sx={{ borderColor: 'red', color: 'red' }}>
+            Clear
+        </Button> 
+        <div>
+            {motions.map(motion => (
+                <MotionCard motion={motion} rerenderFunction={triggerRerender} key={motion.id} />
+            ))}
+        </div>
         </Box>
+        
       )
 }
+
 
 export default Motions

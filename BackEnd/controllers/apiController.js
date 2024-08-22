@@ -199,11 +199,11 @@ async function createMotion(req, res) {
     console.log(req.body)
     let status = false
     if (["open_moderated_caucus", "extend_moderated_caucus"].includes(req.body.motionType)) {
-        const response = db.createModMotion(req.body.committeeID, req.body.profileID, req.body.motionType, req.body.name, req.body.time)
+        const response = await db.createModMotion(req.body.committeeID, req.body.profileID, req.body.motionType, req.body.name, req.body.time, req.body.country, req.body.speakingTime)
         status = response
     }
     else {
-        const response = db.createUnModMotion(req.body.committeeID, req.body.profileID, req.body.motionType, req.body.time)
+        const response = await db.createUnModMotion(req.body.committeeID, req.body.profileID, req.body.motionType, req.body.time, req.body.country)
         status = response
     }
     if (status) {
@@ -212,7 +212,16 @@ async function createMotion(req, res) {
     else {
         res.sendStatus(400)
     }
-
 }
 
-module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, toggleAttribute, getMotionTypes, createMotion}
+async function deleteMotion(req, res) {
+    const response = await db.deleteMotion(req.body.motionID)
+    if (response) {
+        res.sendStatus(200)
+    }
+    else {
+        res.sendStatus(400)
+    }
+}
+
+module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, toggleAttribute, getMotionTypes, createMotion, deleteMotion}

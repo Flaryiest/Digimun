@@ -10,6 +10,8 @@ committeeRouter.put("/countries/toggle", apiController.verifyToken, apiControlle
 
 committeeRouter.get("/motionTypes", apiController.verifyToken, apiController.getMotionTypes)
 
+committeeRouter.delete("/motion", apiController.verifyToken, apiController.deleteMotion)
+
 committeeRouter.post("/motion", apiController.verifyToken, apiController.createMotion)
 
 committeeRouter.post("/", apiController.verifyToken, apiController.getCommittee)

@@ -237,17 +237,19 @@ async function getMotionTypes() {
     }
 }
 
-async function createModMotion(committeeID, profileID, motionType, name, time) {
+async function createModMotion(committeeID, profileID, motionType, name, time, country, speakingTime) {
     try {
+        const decodedCommitteeID = sqids.decode(committeeID)[0]
         const motion = await prisma.motion.create({
             data: {
                text: name,
                time: time,
-               connect: {
-                committee: committeeID,
-                profileID: profileID,
-                motionType: motionType
-            }}
+               country: country,
+               speakingTime, speakingTime,
+               committeeId: decodedCommitteeID,
+               profileId: profileID,
+               motionType: motionType
+            }
         })
         const motionID = motion.id
 
@@ -268,15 +270,15 @@ async function createModMotion(committeeID, profileID, motionType, name, time) {
     }
 }
 
-async function createUnModMotion(committeeID, profileID, motionType, time) {
+async function createUnModMotion(committeeID, profileID, motionType, time, country) {
     try {
-        console.log("test")
         const decodedCommitteeID = sqids.decode(committeeID)[0]
         const response = await prisma.motion.create({
             data: {
                 time: time,
                 committeeId: decodedCommitteeID,
                 profileId: profileID,
+                country: country,
                 motionType: motionType
             }
         })
@@ -288,4 +290,19 @@ async function createUnModMotion(committeeID, profileID, motionType, time) {
     }
 }
 
-module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion}
+async function deleteMotion(motionID) {
+    try {
+        const response = await prisma.motion.delete({
+            where: {
+                id: motionID
+            }
+        })
+        return true
+
+    } catch(error) {
+        console.log(error)
+        return false
+    }
+}
+
+module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion, deleteMotion}
