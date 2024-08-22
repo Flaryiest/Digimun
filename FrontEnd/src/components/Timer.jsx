@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, LinearProgress, Card, TextField, Button, MenuItem, Select } from '@mui/material'
 
-const Timer = () => {
+function Timer({totalTime, speakingTime, label}) {
   const [time, setTime] = useState(600)
   const [maxTime, setMaxTime] = useState(600)
   const [isActive, setIsActive] = useState(true)

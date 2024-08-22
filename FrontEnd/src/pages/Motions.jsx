@@ -36,7 +36,9 @@ const MotionCard = ({ motion, rerenderFunction }) => {
             credentials: 'include',
             body: JSON.stringify({motion: motionInfo})
         })
+        const caucus = await response.json()
         if (response.status == 200) {
+            console.log(caucus)
             const path = "/committees/" + params.committeeID + "/mod/" + motionInfo.code
             navigate(path)
         }
@@ -179,6 +181,8 @@ function Motions() {
             setSelectedTime("")
             setSelectedSpeakingTime("")
             setShowNameField(false)
+            triggerRerender()
+
         }
         else {
             console.log("motion creation failed")

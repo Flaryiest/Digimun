@@ -1,24 +1,36 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import { useTheme, useMediaQuery } from '@mui/material';
-
+import * as React from 'react'
+import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import { Link, useParams, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 
 function CommitteeNavBar() {
-    const theme = useTheme();
     const navigate = useNavigate()
     const { committeeID } = useParams();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [anchorEl, setAnchorEl] = React.useState(null);
 
+    useEffect(() => {
+        getMods()
+    }, [])
+
+    async function getMods() {
+        const response = await fetch("http://localhost:3000/api/committee/mods", {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({committeeID: committeeID})
+        })
+    }
+
     const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+        setAnchorEl(event.currentTarget)
     }
 
     const handleClose = () => {

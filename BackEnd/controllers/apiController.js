@@ -226,13 +226,34 @@ async function deleteMotion(req, res) {
 
 async function openMotion(req, res) {
     console.log(req.body.motion)
-    const response = await db.openMotion(req.body.motion)
-    if (response) {
-        res.sendStatus(200)
+    const caucus = await db.openMotion(req.body.motion)
+    if (caucus) {
+        res.status(200).json(caucus)
     }
     else {
         res.sendStatus(400)
     }
 }
 
-module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, toggleAttribute, getMotionTypes, createMotion, deleteMotion, openMotion}
+async function getModInfo(req, res) {
+    console.log(req.body.modID)
+    const response = await db.getModInfo(req.body.modID)
+    if (response) {
+        res.json(response)
+    }
+    else {
+        res.sendStatus(400)
+    }
+}
+
+async function getMods(req, res) {
+    const mods = await db.getMods(req.body.committeeID)
+    if (mods) {
+        res.json(mods)
+    }
+    else {
+        res.sendStatus(400)
+    }
+}
+
+module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, toggleAttribute, getMotionTypes, createMotion, deleteMotion, openMotion, getModInfo, getMods}

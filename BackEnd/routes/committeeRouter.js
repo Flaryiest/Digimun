@@ -16,7 +16,9 @@ committeeRouter.post("/motion", apiController.verifyToken, apiController.createM
 
 committeeRouter.post("/caucus", apiController.verifyToken, apiController.openMotion)
 
-committeeRouter.put("/mod", apiController.verifyToken)
+committeeRouter.put("/mod", apiController.verifyToken, apiController.getModInfo)
+
+committeeRouter.put("/mods", apiController.verifyToken, apiController.getMods)
 
 committeeRouter.post("/", apiController.verifyToken, apiController.getCommittee)
 

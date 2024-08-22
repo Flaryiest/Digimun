@@ -307,7 +307,7 @@ async function deleteMotion(motionID) {
 
 async function openMotion(motion) {
     try {
-        const response = await prisma.caucus.create({
+        const caucus = await prisma.caucus.create({
             data:{
                 text: motion.text,
                 time: motion.time,
@@ -318,11 +318,56 @@ async function openMotion(motion) {
                 motionType: motion.motionType
             }
         })
-        return true
+        const caucusID = caucus.id
+        const caucusCode = sqids.encode([caucusID])
+        const updatedCaucus = await prisma.caucus.update({
+            where: {
+                id: caucusID
+            },
+            data: {
+                code: caucusCode
+            }
+        })
+        await deleteMotion(motion.id)
+        return updatedCaucus
+
     } catch(error) {
         console.log(error)
         return false
     }
 }
 
-module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion, deleteMotion, openMotion}
+async function getModInfo(modID) {
+    try {
+        const caucuses = await prisma.caucus.findMany()
+        console.log(caucuses)
+        const decodedModID = sqids.decode(modID)[0] - 1
+        console.log(decodedModID)
+        const response = await prisma.caucus.findUnique({
+            where: {
+                id: decodedModID
+            }
+        })
+        return response
+    } catch(error) {
+        return false
+    }
+}
+
+async function getMods(committeeID) {
+    try {
+        const decodedCommitteeID = sqids.decode(committeeID)[0]
+        const mods = await prisma.caucus.findMany({
+            where: {
+                committeeId: decodedCommitteeID
+            }
+        })
+        console.log(mods, "mods")
+        return mods
+    } catch(error) {
+        console.log(error)
+        return false
+    }
+}
+
+module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion, deleteMotion, openMotion, getModInfo, getMods}
