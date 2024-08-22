@@ -305,4 +305,24 @@ async function deleteMotion(motionID) {
     }
 }
 
-module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion, deleteMotion}
+async function openMotion(motion) {
+    try {
+        const response = await prisma.caucus.create({
+            data:{
+                text: motion.text,
+                time: motion.time,
+                country: motion.country,
+                speakingTime: motion.speakingTime,
+                committeeId: motion.committeeId,
+                profileId: motion.profileId,
+                motionType: motion.motionType
+            }
+        })
+        return true
+    } catch(error) {
+        console.log(error)
+        return false
+    }
+}
+
+module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion, deleteMotion, openMotion}

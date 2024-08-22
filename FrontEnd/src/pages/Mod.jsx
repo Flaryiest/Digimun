@@ -1,7 +1,25 @@
+import { useParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 function Mod() {
-    return <div>
+    const { committeeID, modID } = useParams()
+    const { modInfo, setModInfo } = useState({})
+    async function getModInfo() {
+        const response = fetch("http://localhost:3000/api/committee/mod", {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({modID: modID})
+        })
+    }
 
-    </div>
+    return (
+        <div>
+        <h1>Committee ID: {committeeID}</h1>
+        <h1>Mod ID: {modID}</h1>
+        </div>
+  )
 }
 
 export default Mod

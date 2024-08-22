@@ -14,6 +14,10 @@ committeeRouter.delete("/motion", apiController.verifyToken, apiController.delet
 
 committeeRouter.post("/motion", apiController.verifyToken, apiController.createMotion)
 
+committeeRouter.post("/caucus", apiController.verifyToken, apiController.openMotion)
+
+committeeRouter.put("/mod", apiController.verifyToken)
+
 committeeRouter.post("/", apiController.verifyToken, apiController.getCommittee)
 
 

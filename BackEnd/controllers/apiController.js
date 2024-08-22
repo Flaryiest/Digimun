@@ -224,4 +224,15 @@ async function deleteMotion(req, res) {
     }
 }
 
-module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, toggleAttribute, getMotionTypes, createMotion, deleteMotion}
+async function openMotion(req, res) {
+    console.log(req.body.motion)
+    const response = await db.openMotion(req.body.motion)
+    if (response) {
+        res.sendStatus(200)
+    }
+    else {
+        res.sendStatus(400)
+    }
+}
+
+module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, toggleAttribute, getMotionTypes, createMotion, deleteMotion, openMotion}

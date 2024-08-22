@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import React from "react"
 import {Box, TextField, Autocomplete, Button, Divider, Card, CardContent, Typography, Paper} from '@mui/material';
@@ -7,16 +7,17 @@ import PersonIcon from '@mui/icons-material/Person'
 import DescriptionIcon from '@mui/icons-material/Description'
 
 const MotionCard = ({ motion, rerenderFunction }) => {
-    const [motionID, setMotionID] = useState(motion.id)
+    const navigate = useNavigate()
+    const params = useParams()
+    const [motionInfo, setMotionInfo] = useState(motion)
     async function deleteMotion() {
-        console.log(motionID)
         const response = await fetch("http://localhost:3000/api/committee/motion", {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({motionID: motionID})
+            body: JSON.stringify({motionID: motionInfo.id})
         })
         if (response.status == 200) {
             rerenderFunction()
@@ -24,6 +25,25 @@ const MotionCard = ({ motion, rerenderFunction }) => {
         else {
             console.log("delete failed")
         }
+    }
+
+    async function openMotion() {
+        const response = await fetch("http://localhost:3000/api/committee/caucus", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({motion: motionInfo})
+        })
+        if (response.status == 200) {
+            const path = "/committees/" + params.committeeID + "/mod/" + motionInfo.code
+            navigate(path)
+        }
+        else {
+            console.log("opening motion failed")
+        }
+        
     }
 
     return (
@@ -58,7 +78,8 @@ const MotionCard = ({ motion, rerenderFunction }) => {
           <Button
             variant="outlined"
             color="success"
-            sx={{ borderColor: 'green', color: 'green' }}>
+            sx={{ borderColor: 'green', color: 'green' }}
+            onClick={openMotion}>
             Open
           </Button>
         </Box>
@@ -85,7 +106,7 @@ function Motions() {
         getCountriesInCommittee()
         getMotionTypes()
         getMotions()
-    }, [])
+    }, [rerender])
 
     useEffect(() => {
         if (["Open Moderated Caucus", "Extend Moderated Caucus"].includes(selectedMotion)) {

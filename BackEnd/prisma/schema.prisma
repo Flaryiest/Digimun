@@ -31,6 +31,7 @@ model Committee {
   users      User[]    @relation("UserCommittees")
   profiles   Profile[]
   Motion     Motion[]
+  Caucus     Caucus[]
 }
 
 model Country {
@@ -55,9 +56,24 @@ model Profile {
   present      Boolean   @default(false)
   voting       Boolean   @default(false)
   Motion       Motion[]
+  Caucus       Caucus[]
 }
 
 model Motion {
+  id           Int        @id @default(autoincrement())
+  profile      Profile?   @relation(fields: [profileId], references: [id])
+  profileId    Int?
+  text         String?
+  code         String?
+  motionType   MotionType @default(open_unmoderated_caucus)
+  time         String
+  speakingTime String?
+  committee    Committee  @relation(fields: [committeeId], references: [id])
+  committeeId  Int
+  country      String?
+}
+
+model Caucus {
   id           Int        @id @default(autoincrement())
   profile      Profile?   @relation(fields: [profileId], references: [id])
   profileId    Int?
