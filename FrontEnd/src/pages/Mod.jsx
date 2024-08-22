@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import Timer from "../components/Timer"
 function Mod() {
     const { committeeID, modID } = useParams()
     const { modInfo, setModInfo } = useState({})
@@ -18,6 +19,7 @@ function Mod() {
         <div>
         <h1>Committee ID: {committeeID}</h1>
         <h1>Mod ID: {modID}</h1>
+        <Timer/>
         </div>
   )
 }
