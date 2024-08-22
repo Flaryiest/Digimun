@@ -58,7 +58,8 @@ model Profile {
   present      Boolean   @default(false)
   voting       Boolean   @default(false)
   Motion       Motion[]
-  Caucus       Caucus[]
+  Caucus       Caucus?   @relation(fields: [caucusId], references: [id])
+  caucusId     Int?
 }
 
 model Motion {
@@ -77,8 +78,7 @@ model Motion {
 
 model Caucus {
   id           Int        @id @default(autoincrement())
-  profile      Profile?   @relation(fields: [profileId], references: [id])
-  profileId    Int?
+  profile      Profile[]
   text         String?
   code         String?
   motionType   MotionType @default(open_unmoderated_caucus)

@@ -277,4 +277,14 @@ async function getUnmod(req, res) {
     }
 }
 
-module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, toggleAttribute, getMotionTypes, createMotion, deleteMotion, openMotion, getModInfo, getMods, getUnmod}
+async function deleteMod(req, res) {
+    const response = await db.deleteMod(req.body.modID)
+    if (response) {
+        res.sendStatus(200)
+    }
+    else {
+        res.sendStatus(400)
+    }
+}
+
+module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, toggleAttribute, getMotionTypes, createMotion, deleteMotion, openMotion, getModInfo, getMods, getUnmod, deleteMod}

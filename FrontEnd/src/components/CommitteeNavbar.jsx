@@ -4,19 +4,26 @@ import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
+import { Menu, MenuItem, IconButton } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 function CommitteeNavBar() {
     const navigate = useNavigate()
-    const { committeeID } = useParams();
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const { committeeID } = useParams()
+    const [anchorEl, setAnchorEl] = useState(null)
+    const [mods, setMods] = useState([])
+    const [rerender, setRerender] = useState(0)
 
+    console.log(mods, "mods")
     useEffect(() => {
         getMods()
-    }, [])
+    }, [rerender])
+
+    function triggerRerender() {
+        setRerender(prevState => prevState + 1)
+    }
 
     async function getMods() {
         const response = await fetch("http://localhost:3000/api/committee/mods", {
@@ -27,6 +34,30 @@ function CommitteeNavBar() {
             credentials: 'include',
             body: JSON.stringify({committeeID: committeeID})
         })
+        if (response.status == 200) {
+            const caucuses = await response.json()
+            setMods(caucuses)
+        }
+        else {
+            console.log("Get Mods Failed")
+        }
+    }
+
+    async function deleteMod(modID) {
+        const response = await fetch("http://localhost:3000/api/committee/mod", {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({modID: modID})
+        })
+        if (response.status == 200) {
+            triggerRerender()
+        }
+        else {
+            console.log("delete mod failed")
+        }
     }
 
     const handleClick = (event) => {
@@ -102,21 +133,26 @@ function CommitteeNavBar() {
                         <Menu
                             anchorEl={anchorEl}
                             open={Boolean(anchorEl)}
-                            onClose={handleClose}
-                        >
-                            <MenuItem onClick={handleClose}>
-                                <Link to={`/committees/${committeeID}/mod/page1`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                    Mod Page 1
+                            onClose={handleClose}>
+                        {mods.map((mod) => (
+                            <MenuItem key={mod.id} onClick={handleClose}>
+                                <Link
+                                    to={`/committees/${committeeID}/mod/${mod.code}`}
+                                    style={{ textDecoration: 'none', color: 'inherit', flexGrow: 1 }}>
+                                {mod.text}
                                 </Link>
+                                <IconButton
+                                    edge="end"
+                                    aria-label="delete"
+                                    color="error"
+                                    onClick={() => deleteMod(mod.id)}
+                                    size="small">
+                                    <DeleteIcon />
+                                </IconButton>
                             </MenuItem>
-                            <MenuItem onClick={handleClose}>
-                                <Link to={`/committees/${committeeID}/mod/page2`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                    Mod Page 2
-                                </Link>
-                            </MenuItem>
+                        ))}
                             <MenuItem onClick={handleClose}>
                                 <Link to={`/committees/${committeeID}/mod/page3`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                    Mod Page 3
                                 </Link>
                             </MenuItem>
                         </Menu>

@@ -395,8 +395,8 @@ async function openUnmodMotion(committeeID, time) {
 }
 
 async function getUnmod(committeeID) {
-    const decodedCommitteeID = sqids.decode(committeeID)[0]
     try {
+        const decodedCommitteeID = sqids.decode(committeeID)[0]
         const committee = await prisma.committee.findUnique({
             where: {
                 id: decodedCommitteeID
@@ -410,4 +410,18 @@ async function getUnmod(committeeID) {
     }
 }
 
-module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion, deleteMotion, openMotion, getModInfo, getMods, openUnmodMotion, getUnmod}
+async function deleteMod(modID) {
+    try {
+        const response = await prisma.caucus.delete({
+            where: {
+                id: modID
+            }
+        })
+        return true
+    } catch(error) {
+        console.log(error)
+        return false
+    }
+}
+
+module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion, deleteMotion, openMotion, getModInfo, getMods, openUnmodMotion, getUnmod, deleteMod}
