@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, LinearProgress, Card, TextField, Button, MenuItem, Select } from '@mui/material'
 
 function Timer({currentTime, totalTime, label}) {
-
     const [time, setTime] = useState(currentTime)
     const [maxTime, setMaxTime] = useState(totalTime)
     const [isActive, setIsActive] = useState(false)
@@ -48,8 +47,8 @@ function Timer({currentTime, totalTime, label}) {
     return (
         <Card 
         sx={{
-            width: '60%',
-            height: '300px', 
+            width: '100%',
+            height: '350px', 
             padding: '15px', 
             display: 'flex', 
             flexDirection: 'column', 
@@ -57,6 +56,9 @@ function Timer({currentTime, totalTime, label}) {
             justifyContent: 'center',
             position: 'relative',
             borderRadius: '12px',
+            borderWidth: '1px',
+            borderStyle: 'solid',
+            borderColor: '#cfcfcf',
             boxSizing: 'border-box',
         }}>
         <Typography 
@@ -80,7 +82,15 @@ function Timer({currentTime, totalTime, label}) {
             cursor: 'pointer',
             padding: '5px',
             borderRadius: '5px',
-            backgroundColor: '#ddd'
+            backgroundColor: '#ddd',
+            transition: 'background-color 0.3s, transform 0.3s',
+            '&:hover': {
+                backgroundColor: '#ccc',
+                transform: 'scale(1.05)',
+            },
+            '&:active': {
+                backgroundColor: '#bbb',
+            },
             }}
             onClick={handleClick}>
             {formatTime(time)}

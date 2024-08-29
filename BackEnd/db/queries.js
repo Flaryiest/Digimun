@@ -324,8 +324,12 @@ async function openMotion(motion) {
                 country: motion.country,
                 speakingTime: motion.speakingTime,
                 committeeId: motion.committeeId,
-                profileId: motion.profileId,
-                motionType: motion.motionType
+                motionType: motion.motionType,
+                profile: {
+                    connect: {
+                        id: motion.profileId
+                    }
+                }
             }
         })
         const caucusID = caucus.id
@@ -349,7 +353,7 @@ async function openMotion(motion) {
 
 async function getModInfo(modID) {
     try {
-        const decodedModID = sqids.decode(modID)[0] - 1
+        const decodedModID = sqids.decode(modID)[0]
         const response = await prisma.caucus.findUnique({
             where: {
                 id: decodedModID

@@ -247,7 +247,6 @@ async function openMotion(req, res) {
 }
 
 async function getModInfo(req, res) {
-    console.log(req.body.modID)
     const response = await db.getModInfo(req.body.modID)
     if (response) {
         res.json(response)

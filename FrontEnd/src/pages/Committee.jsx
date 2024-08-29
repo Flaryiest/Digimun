@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useParams, Link } from "react-router-dom"
-import * as React from 'react';
-import { Grid, Card, CardContent, Typography, Box, Container, Button } from '@mui/material';
+import * as React from 'react'
+import { Grid, Card, CardContent, Typography, Box, Container, Button } from '@mui/material'
 
 function Committee() {
     const [committeeInfo, setCommitteeInfo] = useState(null)
