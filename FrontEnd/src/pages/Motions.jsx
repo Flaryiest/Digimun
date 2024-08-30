@@ -90,7 +90,6 @@ const MotionCard = ({ motion, rerenderFunction }) => {
           )
     }
     else {
-        {console.log(motion)}
         return (<Card sx={{ mt: 2, mb: 2 }} key={motion.id}>
               <CardContent>
                 <Typography variant="h6" component="div">
@@ -332,12 +331,15 @@ function Motions() {
         </Button>
     
         <Divider sx={{ mt: 4, mb: 2 }} />
-        <Button
-            variant="outlined"
-            color="error"
-            sx={{ borderColor: 'red', color: 'red' }}>
-            Clear
-        </Button> 
+        <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10%'}}>
+          <Button
+              variant="outlined"
+              color="error"
+              sx={{ borderColor: 'red', color: 'red' }}>
+              Clear
+          </Button> 
+          <Box>2 votes required to pass a motion</Box>
+        </Box>
         <div>
             {motions.map(motion => (
                 <MotionCard motion={motion} rerenderFunction={triggerRerender} key={motion.id} />

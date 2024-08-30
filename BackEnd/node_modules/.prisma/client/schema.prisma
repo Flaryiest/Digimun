@@ -27,6 +27,7 @@ model Committee {
   topic          String?
   conference     String?
   code           String
+  memberCount    Int       @default(0)
   totalUnmodTime Int       @default(600)
   unmodTime      Int       @default(600)
   countries      Country[]

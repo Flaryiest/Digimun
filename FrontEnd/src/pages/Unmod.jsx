@@ -33,11 +33,14 @@ function Unmod() {
     if (unmodInfo) {
         return <Box
         sx={{display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: '20dvh',
-          boxSizing: 'border-box',}}>
-        <Timer totalTime={unmodInfo.totalTime} currentTime={unmodInfo.time} label={"Unmoderated Caucus"}/>
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: '20dvh',
+            boxSizing: 'border-box',}}>
+        <Box sx={{width: '50%'}}>
+            <Timer totalTime={unmodInfo.totalTime} currentTime={unmodInfo.time} label={"Unmoderated Caucus"}/>
+        </Box>
+        
       </Box> 
     }
 }

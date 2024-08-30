@@ -15,7 +15,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@prisma/client": "^5.18.0",
+    "@prisma/client": "^5.19.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -28,6 +28,6 @@
     "squids": "^6.1.2"
   },
   "devDependencies": {
-    "prisma": "^5.18.0"
+    "prisma": "^5.19.0"
   }
 }
