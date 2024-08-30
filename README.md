@@ -2,11 +2,13 @@
 Digimun is a web application I created to help run Model United Nations conferences. The application is still a WIP and has many bugs that need to be solved.  
 
 Run:  
+To run this code, it is neccessary to create a dotenv file with postgresql DATABASE_URL and a JWT_SECRET, in the backend folder  
 In order to run the application, open two terminals.  
   
 In the first terminal:  
 cd backend  
-npm install  
+npm install
+npx prisma migrate dev --name init  
 npm run start  
   
 In the second terminal:  
