@@ -9,7 +9,7 @@ cd backend
 npm install  
 npm run start  
   
-In the second terminal:
+In the second terminal:  
 cd frontend  
 npm install  
 npm run start  
