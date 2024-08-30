@@ -12,7 +12,7 @@ npm run start
 In the second terminal:  
 cd frontend  
 npm install  
-npm run start  
+npm run dev 
   
   
 Issues To Fix:
