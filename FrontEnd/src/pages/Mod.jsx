@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, createContext, useContext } from 'react'
 import React from 'react'
 import { Box, Card, Button, Typography, Autocomplete, TextField } from '@mui/material'
 import Timer from "../components/Timer"
@@ -11,10 +11,11 @@ function Mod() {
     const [speaking, setSpeaking] = useState(null)
     const [selectionValue, setSelectionValue] = useState(null)
     const selectionRef = useRef(null)
-    useEffect(() => {
+    useEffect(() => {   
         getModInfo()
         getCountriesInCommittee()
-    }, [])
+        console.log("rerendering")
+    }, [modID])
 
     async function getModInfo() {
         const response = await fetch("http://localhost:3000/api/committee/mod", {
@@ -52,13 +53,37 @@ function Mod() {
         setCountries(countries)
     }
 
+
     async function addToQueue(country) {
-        console.log(country)
         if (!(queue.includes(country))) {
             setQueue([...queue, country])
+            const response = await fetch("http://localhost:3000/api/committee/mod/add", {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({modID: modID, committeeID: committeeID, country: country, })
+            })
+
+            if (response.status == 200) {
+                console.log(response)
+            }
+            else {
+                console.log("failed to add to queue")
+            }
         }
     }
+
+    async function addToSpeaking() {
+        if (queue) {
+            setSpeaking(queue[0])
+            queue.splice(0, 1)
+        }
+    }
+
     console.log(queue)
+    console.log(modInfo, "modinfo", countries, "countries")
     if (modInfo && countries) {
         return (
             <Box sx={{ 
@@ -71,7 +96,9 @@ function Mod() {
               width: '100%'
             }}>
               <Card sx={{ width: '60%', padding: '20px', marginBottom: '20px' }}>
-                <Typography variant="h5">Header</Typography>
+                <Typography variant="h5">
+                    {modInfo.text}
+                </Typography>
               </Card>
               
               <Box sx={{ 
@@ -85,6 +112,9 @@ function Mod() {
                 <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '10px', width: '50%', height: '100%'}}>
                     <Card sx={{ padding: '10px' }}>
                         <Typography variant="h6">Now Speaking</Typography>
+                        <Box>
+                            {speaking}
+                        </Box>
                     </Card>
                     <Card sx={{ padding: '10px', position: 'relative' }}>
                     <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
@@ -92,7 +122,8 @@ function Mod() {
                         <Button 
                         variant="contained" 
                         color="primary" 
-                        sx={{ position: 'absolute', top: '10px', right: '10px' }}>
+                        sx={{ position: 'absolute', top: '10px', right: '10px' }}
+                        onClick={addToSpeaking}>
                         Next
                         </Button>
                     </Box>

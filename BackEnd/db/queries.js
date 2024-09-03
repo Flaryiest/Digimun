@@ -1,5 +1,4 @@
 const { PrismaClient, MotionType  } = require('@prisma/client')
-const { profile } = require('console')
 const prisma = new PrismaClient()
 const Blob = require('buffer').Blob
 const Sqids = require('sqids/cjs').default
@@ -428,4 +427,50 @@ async function deleteMod(modID) {
     }
 }
 
-module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion, deleteMotion, openMotion, getModInfo, getMods, openUnmodMotion, getUnmod, deleteMod}
+async function addCountryToCaucus(modID, committeeID, country) {
+    try {
+        const decodedCommitteeID = sqids.decode(committeeID)[0]
+        const decodedModID = sqids.decode(modID)[0]
+
+        const countryInfo = await prisma.country.findFirst({
+            where: {
+               country: country 
+            }
+        })
+
+        const caucus = await prisma.caucus.findFirst({
+            where: {
+                id: decodedModID
+            },
+            include: {
+                countries: true
+            }
+        })
+        let currentQueue = caucus.countries
+        
+        console.log(currentQueue, "queue")
+
+        const response = await prisma.caucus.update({
+            where: {
+                id: decodedModID
+            },
+            data: {
+                countries: {
+                    connect: [{
+                        id: countryInfo.id
+                    }]
+                }
+            }
+        })
+        console.log(response, "pog")
+        return true
+
+
+    } catch(error) {
+        console.log(error)
+        return false
+    }
+}
+
+
+module.exports = {signUp, login, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, togglePresent, toggleVoting, getMotionTypes, createModMotion, createUnModMotion, deleteMotion, openMotion, getModInfo, getMods, openUnmodMotion, getUnmod, deleteMod, addCountryToCaucus}

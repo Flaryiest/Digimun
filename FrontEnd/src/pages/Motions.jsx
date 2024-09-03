@@ -152,7 +152,7 @@ function Motions() {
     const [profiles, setProfiles] = useState([])
     const [rerender, setRerender] = useState(0)
     const params = useParams()
-    console.log(motions)
+    console.log(countries)
     useEffect(() => {
         getCountriesInCommittee()
         getMotionTypes()
@@ -338,7 +338,7 @@ function Motions() {
               sx={{ borderColor: 'red', color: 'red' }}>
               Clear
           </Button> 
-          <Box>2 votes required to pass a motion</Box>
+          <Box>{Math.ceil((countries.length / 2))} votes required to pass a motion</Box>
         </Box>
         <div>
             {motions.map(motion => (

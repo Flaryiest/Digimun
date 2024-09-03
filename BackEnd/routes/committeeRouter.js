@@ -16,6 +16,8 @@ committeeRouter.post("/motion", apiController.verifyToken, apiController.createM
 
 committeeRouter.post("/caucus", apiController.verifyToken, apiController.openMotion)
 
+committeeRouter.put("/mod/add", apiController.verifyToken, apiController.addCountryToCaucus)
+
 committeeRouter.delete("/mod", apiController.verifyToken, apiController.deleteMod)
 
 committeeRouter.put("/mod", apiController.verifyToken, apiController.getModInfo)
@@ -25,7 +27,6 @@ committeeRouter.put("/unmod", apiController.verifyToken, apiController.getUnmod)
 committeeRouter.put("/mods", apiController.verifyToken, apiController.getMods)
 
 committeeRouter.post("/", apiController.verifyToken, apiController.getCommittee)
-
 
 
 module.exports = committeeRouter

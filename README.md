@@ -17,8 +17,9 @@ npm install
 npm run dev 
   
   
-Issues To Fix:
+Issues To Fix:  
 Committee setup add a country input doesn't autoclear after selection  
+Committee setup switches flicker when a new country is added  
 Clear button on motions page does not delete all motions  
 Unmod time does not get synced to db  
 Committee page needs redesign  
@@ -30,8 +31,7 @@ Create messaging system
 Work on different authority levels  
 Create collaborative text editing system  
 Make Unmod motions delete automatically when opened  
-Create functionality for other mod types  
+Create functionality for other speaker's lists and caucus extensions
 Set up a table with number of people needed for majority, present, present and voting etc to set up page  
-Add a small text blurb with votes required to pass motion to motion page  
 Add clean up function to timer's to save current time when tab is switched  
 Change progress bar to phase through different colors depending on time left Green-Blue-Red  

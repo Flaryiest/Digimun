@@ -23,7 +23,6 @@ const Dashboard = () => {
 
     const createCommittee = async (event) => {
         const data = handleCreate(event)
-        console.log(data)
         const response = await fetch("http://localhost:3000/api/committees", {
             method: "POST",
             credentials: "include",
@@ -32,6 +31,9 @@ const Dashboard = () => {
             },
             body: JSON.stringify({name: data.name, topic: data.topic, conference: data.conference}),
         })
+        if (response.status == 400) {
+          console.log("committee creation failed")
+        }
     
 
     }

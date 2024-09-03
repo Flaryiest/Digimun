@@ -16,7 +16,6 @@ function CommitteeNavBar() {
     const [mods, setMods] = useState([])
     const [rerender, setRerender] = useState(0)
 
-    console.log(mods, "mods")
     useEffect(() => {
         getMods()
     }, [rerender])
@@ -84,7 +83,8 @@ function CommitteeNavBar() {
             backgroundColor: 'rgba(0, 0, 0, 0.1)',
         },
     }
-
+    
+    console.log(mods, "mods")
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar
@@ -147,16 +147,12 @@ function CommitteeNavBar() {
                                     color="error"
                                     onClick={() => deleteMod(mod.id)}
                                     size="small">
-                                    <DeleteIcon />
+                                    <DeleteIcon/>
                                 </IconButton>
                             </MenuItem>
                         ))}
-                            <MenuItem onClick={handleClose}>
-                                <Link to={`/committees/${committeeID}/mod/page3`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                </Link>
-                            </MenuItem>
                         </Menu>
-                        <Link to={`/committees/${committeeID}/chats`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        {/* <Link to={`/committees/${committeeID}/chats`} style={{ textDecoration: 'none', color: 'inherit' }}>
                             <Button color="inherit" sx={buttonStyles}>
                                 Chats
                             </Button>
@@ -165,7 +161,7 @@ function CommitteeNavBar() {
                             <Button color="inherit" sx={buttonStyles}>
                                 Working Papers
                             </Button>
-                        </Link>
+                        </Link> */}
                         <Button color="inherit" onClick={handleLogout} sx={buttonStyles}>
                             Log Out
                         </Button>

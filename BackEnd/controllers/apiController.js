@@ -286,4 +286,15 @@ async function deleteMod(req, res) {
     }
 }
 
-module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, toggleAttribute, getMotionTypes, createMotion, deleteMotion, openMotion, getModInfo, getMods, getUnmod, deleteMod}
+async function addCountryToCaucus(req, res) {
+    console.log("test")
+    const response = await db.addCountryToCaucus(req.body.modID, req.body.committeeID, req.body.country)
+    if (response) {
+        res.sendStatus(200)
+    }
+    else {
+        res.sendStatus(400)
+    }
+}
+
+module.exports = {signUp, logIn, verifyToken, getInfo, checkLoggedIn, logOut, getUser, getCommittees, createCommittee, getPermissions, getCommittee, getCountries, addCountry, removeCountry, toggleAttribute, getMotionTypes, createMotion, deleteMotion, openMotion, getModInfo, getMods, getUnmod, deleteMod, addCountryToCaucus}
