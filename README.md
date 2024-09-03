@@ -16,6 +16,8 @@ cd frontend
 npm install  
 npm run dev 
   
+
+
   
 Issues To Fix:  
 Committee setup add a country input doesn't autoclear after selection  
