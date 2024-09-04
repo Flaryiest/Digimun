@@ -18,7 +18,7 @@ npm run dev
   
 
 
-  
+
 Issues To Fix:  
 Committee setup add a country input doesn't autoclear after selection  
 Committee setup switches flicker when a new country is added  
@@ -37,3 +37,4 @@ Create functionality for other speaker's lists and caucus extensions
 Set up a table with number of people needed for majority, present, present and voting etc to set up page  
 Add clean up function to timer's to save current time when tab is switched  
 Change progress bar to phase through different colors depending on time left Green-Blue-Red  
+Create proper card components for countries in the mod queue
