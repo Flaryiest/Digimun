@@ -17,7 +17,10 @@ npm install
 npm run dev 
   
 
-
+Images:  
+https://i.imgur.com/uJbKLnn.png  
+https://i.imgur.com/caHBHM4.png  
+https://i.imgur.com/i4bbzOE.png  
 
 Issues To Fix:  
 Committee setup add a country input doesn't autoclear after selection  
